@@ -1,2 +1,2 @@
 # nightscout-shell
-Shell Prompt blood glucose values from Nightscout
+Shell prompt with blood glucose values from Nightscout
