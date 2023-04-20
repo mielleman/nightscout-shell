@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/mielleman/nightscout-shell/internal/app/prompt"
@@ -24,9 +23,11 @@ func main() {
 
 	// Set the logger
 	log.SetFormatter(&log.TextFormatter{
-		DisableQuote: true,
+		TimestampFormat:        "2006-01-02 15:04:05",
+		FullTimestamp:          true,
+		DisableQuote:           true,
+		DisableLevelTruncation: true,
 	})
-	log.Info("Main application start")
 
 	// No subcommand, then we run as prompt
 	if len(os.Args) < 2 {
@@ -36,6 +37,7 @@ func main() {
 	// Act per sub command
 	switch os.Args[1] {
 	case "service":
+		log.Info("Service started")
 		serviceCmd.Parse(os.Args[2:])
 		s := service.New(*serviceConfig)
 		s.Start()
@@ -46,7 +48,7 @@ func main() {
 		p.Main()
 
 	default:
-		fmt.Println("ERROR: Expected either 'service' or 'prompt' subcommands")
+		log.Error("Expected either 'service' or 'prompt' subcommands")
 		os.Exit(1)
 	}
 }

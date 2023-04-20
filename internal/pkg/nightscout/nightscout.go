@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -53,7 +54,7 @@ func New(url string, token string) *Nightscout {
 
 func (n *Nightscout) GetStatus() error {
 	url := fmt.Sprintf("%s/api/v1/status?token=%s", n.url, n.token)
-	log.Info(url)
+	log.WithField("url", strings.ReplaceAll(url, n.token, "*****")).Info("Requesting status (for settings and thresholds)")
 
 	// Make the request
 	data, err := n.get(url)
@@ -73,7 +74,7 @@ func (n *Nightscout) GetStatus() error {
 
 func (n *Nightscout) GetLastEntry() (*Entry, error) {
 	url := fmt.Sprintf("%s/api/v1/entries?count=1&token=%s", n.url, n.token)
-	log.Info(url)
+	log.WithField("url", strings.ReplaceAll(url, n.token, "*****")).Info("Requesting latest entry")
 
 	// Make the request
 	data, err := n.get(url)

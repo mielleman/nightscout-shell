@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/mielleman/nightscout-shell/internal/pkg/config"
@@ -78,7 +79,7 @@ func (s *Service) update() {
 	}
 
 	contents := s.convertEntry(entry)
-	fmt.Println(contents)
+	log.WithField("prompt", contents).Infof("Received %d mg/dl, converting to prompt", entry.Value)
 
 	// Save it to the cache file
 	err = s.writeCache(contents)
@@ -122,31 +123,45 @@ func (s *Service) convertEntry(entry *nightscout.Entry) string {
 	}
 
 	// Check the Thresholds
-	// (work with the raw value, as it van be compared to the thresholds)
+	// (work with the raw mgdl value, as it then can be compared to the thresholds)
 	var color string
 	if entry.Value >= s.nightscout.Status.Settings.Thresholds.High {
-		color = "HIGH"
+		color = "1;31" // High
 	} else if entry.Value >= s.nightscout.Status.Settings.Thresholds.TargetTop {
-		color = "ABOVE"
+		color = "0;33" // Above
 	} else if entry.Value >= s.nightscout.Status.Settings.Thresholds.TargetBottom {
-		color = "OK"
+		color = "0;32" // Ok
 	} else if entry.Value >= s.nightscout.Status.Settings.Thresholds.Low {
-		color = "BELOW"
+		color = "0;33" // Below
 	} else {
-		color = "LOW"
+		color = "1;31" // Low
 	}
 
+	log.WithFields(log.Fields{
+		"color":     color,
+		"value":     value,
+		"direction": direction,
+	}).Debug("Outcome")
+
 	// Output the string
-	return fmt.Sprintf("%s%s (%s)", value, direction, color)
+	return fmt.Sprintf("\x1b[%sm💉 %s %s\x1b[m", color, value, direction)
 }
 
 func (s *Service) writeCache(contents string) error {
+	// Create the caching directory if it does not exist
+	err := os.MkdirAll(filepath.Dir(s.config.CacheFile), 0700)
+	if err != nil {
+		return err
+	}
+
+	// Open/Create the cache file
 	file, err := os.Create(s.config.CacheFile)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
+	// Write the content
 	_, err = file.WriteString(contents)
 	if err != nil {
 		return err

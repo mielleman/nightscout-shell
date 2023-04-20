@@ -2,9 +2,10 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type Configuration struct {
@@ -17,7 +18,7 @@ type Configuration struct {
 func new() *Configuration {
 	// Set some defaults
 	return &Configuration{
-		CacheFile:       os.Getenv("HOME") + "/.config/nightscout-shell/cache.dat",
+		CacheFile:       os.Getenv("HOME") + "/.cache/nightscout-shell/prompt.dat",
 		ServiceInterval: 5,
 	}
 }
@@ -25,8 +26,8 @@ func new() *Configuration {
 func ParseConfigFile(filename string) *Configuration {
 	jsonFile, err := os.Open(filename)
 	if err != nil {
-		fmt.Println("ERROR: Failed to load the given configuration file: " + filename)
-		fmt.Println(err)
+		log.Error(err)
+		log.Panic("Failed to load the given configuration file: " + filename)
 		os.Exit(1)
 	}
 

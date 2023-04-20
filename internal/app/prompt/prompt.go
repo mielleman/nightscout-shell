@@ -2,8 +2,10 @@ package prompt
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/mielleman/nightscout-shell/internal/pkg/config"
+	log "github.com/sirupsen/logrus"
 )
 
 type Prompt struct {
@@ -17,5 +19,11 @@ func New(filename string) *Prompt {
 }
 
 func (p *Prompt) Main() {
-	fmt.Println("prompt.Main()")
+	data, err := os.ReadFile(p.config.CacheFile)
+	if err != nil {
+		log.Error(err)
+		log.Panic("Could not read the cache file '%s'", p.config.CacheFile)
+		os.Exit(1)
+	}
+	fmt.Printf("%s", data)
 }
