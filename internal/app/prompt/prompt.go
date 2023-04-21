@@ -22,7 +22,7 @@ func (p *Prompt) Main() {
 	data, err := os.ReadFile(p.config.CacheFile)
 	if err != nil {
 		log.Error(err)
-		log.Panic("Could not read the cache file '%s'", p.config.CacheFile)
+		log.Panicf("Could not read the cache file '%s'", p.config.CacheFile)
 		os.Exit(1)
 	}
 	fmt.Printf("%s", data)

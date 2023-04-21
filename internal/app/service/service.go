@@ -74,7 +74,7 @@ func (s *Service) update() {
 	entry, err := s.nightscout.GetLastEntry()
 	if err != nil {
 		// Every error is fatal
-		log.Error("ERROR: Failed %s", err)
+		log.Errorf("ERROR: Failed %s", err)
 		s.Stop()
 	}
 
@@ -85,7 +85,7 @@ func (s *Service) update() {
 	err = s.writeCache(contents)
 	if err != nil {
 		// Every error is fatal
-		log.Error("ERROR: Failed %s", err)
+		log.Errorf("ERROR: Failed %s", err)
 		s.Stop()
 	}
 }
