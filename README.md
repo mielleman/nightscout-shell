@@ -8,7 +8,7 @@ The program expects a configuration file in `~/.config/nightscout-shell/config.j
 ```
 {
 	"nightscout_url": "https://nightscout.domain.com",
-	"nightscout_token": "token-a1b2c3d4e5f6g7h8",
+	"nightscout_token": "token-a1b2c3d4e5f6g7h8"
 }
 ```
 
