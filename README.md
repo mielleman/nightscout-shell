@@ -1,4 +1,5 @@
 # nightscout-shell
+[![Test](https://github.com/mielleman/nightscout-shell/actions/workflows/test.yml/badge.svg)](https://github.com/mielleman/nightscout-shell/actions/workflows/test.yml)
 
 A command-line program to show the latest [Nightscout](https://github.com/nightscout/cgm-remote-monitor) values in your shell prompt.
 
