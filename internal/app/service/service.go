@@ -30,8 +30,8 @@ func New(filename string) *Service {
 	// Get the latest status from Nightscout
 	err := s.nightscout.GetStatus()
 	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
+		log.Error(err)
+		os.Exit(3)
 	}
 
 	return s

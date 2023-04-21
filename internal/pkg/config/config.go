@@ -27,9 +27,8 @@ func ParseConfigFile(filename string) *Configuration {
 	// Open the configuration file
 	jsonFile, err := os.Open(filename)
 	if err != nil {
-		log.Error(err)
-		log.Panicf("Failed to load the given configuration file: %s", filename)
-		os.Exit(1)
+		log.Errorf("Failed to open the configuration file: %s", filename)
+		os.Exit(4)
 	}
 
 	// Defer the closing of our jsonFile so that we can parse it later on
@@ -42,19 +41,21 @@ func ParseConfigFile(filename string) *Configuration {
 	conf := new()
 	err = json.Unmarshal(byteValue, conf)
 	if err != nil {
+		log.Errorf("Failed to read and parse the configuration file: %s", filename)
 		log.Error(err)
-		log.Panicf("Failed to load the given configuration file: %s", filename)
-		os.Exit(1)
+		os.Exit(4)
 	}
 
 	// Make sure the URL and the Token are set
 	if conf.NightscoutUrl == "" {
-		log.Panicf("Missing Nightscout URL, this value must be set in your configuration file!")
-		os.Exit(1)
+		log.Error("Configuration error, could not read all required values.")
+		log.Errorf("Missing 'nightscout_url', this value must be set in your configuration file!")
+		os.Exit(4)
 	}
 	if conf.NightscoutToken == "" {
-		log.Panicf("Missing Nightscout Token, this value must be set in your configuration file!")
-		os.Exit(1)
+		log.Error("Configuration error, could not read all required values.")
+		log.Errorf("Missing 'nightscout_token', this value must be set in your configuration file!")
+		os.Exit(4)
 	}
 
 	return conf

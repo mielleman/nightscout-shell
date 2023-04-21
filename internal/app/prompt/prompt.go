@@ -21,9 +21,9 @@ func New(filename string) *Prompt {
 func (p *Prompt) Main() {
 	data, err := os.ReadFile(p.config.CacheFile)
 	if err != nil {
+		log.Errorf("Could not read the cache file '%s'", p.config.CacheFile)
 		log.Error(err)
-		log.Panicf("Could not read the cache file '%s'", p.config.CacheFile)
-		os.Exit(1)
+		os.Exit(2)
 	}
 	fmt.Printf("%s", data)
 }

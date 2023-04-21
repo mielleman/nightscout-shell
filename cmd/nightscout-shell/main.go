@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"github.com/mielleman/nightscout-shell/internal/app/prompt"
@@ -21,7 +22,7 @@ func main() {
 	promptCmd := flag.NewFlagSet("prompt", flag.ExitOnError)
 	promptConfig := promptCmd.String("config", defaultConfigFilename, "Location of the configuration file")
 
-	// Set the logger
+	// Set the logger format
 	log.SetFormatter(&log.TextFormatter{
 		TimestampFormat:        "2006-01-02 15:04:05",
 		FullTimestamp:          true,
@@ -29,9 +30,15 @@ func main() {
 		DisableLevelTruncation: true,
 	})
 
-	// No subcommand, then we run as prompt
+	// No sub-command, then we explain the usage
 	if len(os.Args) < 2 {
-		os.Args = append(os.Args, "prompt")
+		fmt.Printf("%s (service|prompt)\n", os.Args[0])
+		fmt.Println()
+		fmt.Println("Usage:")
+		fmt.Println("  prompt    Get the value to be used in your prompt")
+		fmt.Println("  service   Run the service to retrieve and update the latest value used by prompt")
+		fmt.Println()
+		os.Exit(1)
 	}
 
 	// Act per sub command
@@ -48,7 +55,7 @@ func main() {
 		p.Main()
 
 	default:
-		log.Error("Expected either 'service' or 'prompt' subcommands")
+		log.Error("Expected either the 'service' or 'prompt' sub-command.")
 		os.Exit(1)
 	}
 }
