@@ -1,5 +1,6 @@
 # nightscout-shell
-Shell prompt with blood glucose values from Nightscout
+
+A command-line program to show the latest [Nightscout](https://github.com/nightscout/cgm-remote-monitor) values in your shell prompt.
 
 ## Configuration
 
